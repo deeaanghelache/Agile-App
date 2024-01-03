@@ -1,5 +1,6 @@
 package com.unibuc.appbackend.entities;
 
+import com.unibuc.appbackend.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class Role {
     private String roleId;
 
     @Column(columnDefinition = "varchar(15)", unique = true)
-    private String roleName;
+    private RoleName roleName;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRole> userRoles;
