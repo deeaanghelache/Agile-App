@@ -4,6 +4,7 @@ import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.exceptions.UserAlreadyExistsException;
 import com.unibuc.appbackend.exceptions.UserNotFoundException;
 import com.unibuc.appbackend.interfaces.UserRepository;
+import com.unibuc.appbackend.interfaces.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,14 @@ import java.util.Optional;
 public class UserService {
 
     private UserRepository userRepository;
+    private UserRoleService userRoleService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserRoleService userRoleService) {
         this.userRepository = userRepository;
+        this.userRoleService = userRoleService;
     }
 
     public User create(User user) {
@@ -28,6 +31,7 @@ public class UserService {
             throw new UserAlreadyExistsException();
         });
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRoleService.addRoleForUser(user);
         return userRepository.save(user);
     }
 

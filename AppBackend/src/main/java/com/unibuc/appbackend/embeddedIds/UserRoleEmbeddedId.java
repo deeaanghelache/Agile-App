@@ -18,4 +18,9 @@ public class UserRoleEmbeddedId implements Serializable {
 
     @Column(name = "user_id", nullable = false)
     private String userId;
+
+    public UserRoleEmbeddedId(String roleId, String userId) {
+        this.roleId = roleId;
+        this.userId = userId;
+    }
 }
