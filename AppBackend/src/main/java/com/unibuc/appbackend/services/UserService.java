@@ -1,14 +1,75 @@
 package com.unibuc.appbackend.services;
 
+import com.unibuc.appbackend.entities.User;
+import com.unibuc.appbackend.exceptions.UserAlreadyExistsException;
+import com.unibuc.appbackend.exceptions.UserNotFoundException;
 import com.unibuc.appbackend.interfaces.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public User create(User user) {
+        userRepository.findByEmail(user.getEmail()).ifPresent(ex -> {
+            throw new UserAlreadyExistsException();
+        });
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    public User login(User user) {
+        Optional<User> userFromDB = userRepository.findById(user.getEmail());
+        if (userFromDB.isPresent()) {
+            if (bCryptPasswordEncoder.matches(userFromDB.get().getPassword(), user.getPassword())){
+                return userFromDB.get();
+            }
+        }
+        return null;
+    }
+
+    public User getUserById(String uuid) {
+        Optional<User> user = userRepository.findById(uuid);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void changePassword(String uuid, String password) {
+        Optional<User> user = userRepository.findById(uuid);
+        if (user.isPresent()) {
+            user.get().setPassword(bCryptPasswordEncoder.encode(password));
+            userRepository.save(user.get());
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
+    public void delete(String uuid) {
+        Optional<User> user = userRepository.findById(uuid);
+        if (user.isPresent()) {
+            userRepository.deleteById(uuid);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 }
