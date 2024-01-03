@@ -1,6 +1,6 @@
 package com.unibuc.appbackend.entities;
 
-import com.unibuc.enums.TaskAssignedStatus;
+import com.unibuc.appbackend.enums.TaskAssignedStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

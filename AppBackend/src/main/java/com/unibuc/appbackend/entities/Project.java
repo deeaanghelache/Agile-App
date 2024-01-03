@@ -18,6 +18,9 @@ public class Project {
     private String projectId;
 
     @Column(columnDefinition = "varchar(1000)")
+    private String name;
+
+    @Column(columnDefinition = "varchar(1000)")
     private String description;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
