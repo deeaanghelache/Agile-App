@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -14,9 +15,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class Sprint {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
-    private String sprintId;
+    private UUID sprintId;
 
     @Column()
     private LocalDate deadline;

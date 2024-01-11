@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Embeddable
 @Data
@@ -14,8 +15,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserRoleEmbeddedId implements Serializable {
     @Column(name = "role_id", nullable = false)
-    private String roleId;
+    private UUID roleId;
 
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private UUID userId;
 }

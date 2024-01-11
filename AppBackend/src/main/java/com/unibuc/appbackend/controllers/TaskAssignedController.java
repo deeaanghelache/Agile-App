@@ -17,7 +17,7 @@ public class TaskAssignedController {
         this.taskAssignedService = taskAssignedService;
     }
 
-    @PostMapping("/create/{userId}/{projectId}/{sprintId}")
+    @PostMapping("/createTask/{userId}/{projectId}/{sprintId}")
     public ResponseEntity<TaskAssigned> create(@PathVariable("userId") String userId,
                                                @PathVariable("projectId") String projectId,
                                                @PathVariable("sprintId") String sprintId,

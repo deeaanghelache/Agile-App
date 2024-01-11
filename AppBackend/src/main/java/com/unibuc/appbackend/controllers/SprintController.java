@@ -16,7 +16,7 @@ public class SprintController {
         this.sprintService = sprintService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/createSprint")
     public ResponseEntity<Sprint> create(@RequestBody Sprint sprint) {
         return ResponseEntity.ok(sprintService.create(sprint));
     }

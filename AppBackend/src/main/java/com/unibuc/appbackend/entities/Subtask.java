@@ -1,10 +1,12 @@
 package com.unibuc.appbackend.entities;
 
 import jakarta.persistence.*;
-import com.unibuc.enums.TaskAssignedStatus;
+import com.unibuc.appbackend.enums.TaskAssignedStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Data
 @Entity
@@ -12,9 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Subtask {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
-    private String subtaskId;
+    private UUID subtaskId;
 
     @Column(columnDefinition = "varchar(1000)")
     private String description;
