@@ -156,5 +156,25 @@ Each java class has a corresponding Controller class.
 
 ## Frontend
 
-## Swagger
+## Swagger Documentation
+
+URL: http://localhost:8080/swagger-ui.html
+
+![](/ReadmePhotos/Swagger.png)
+
+To enable Swagger, I used the SpringDoc OpenApi dependency. 
+
+Each endpoint from each controller is annotated with *@Operation* and *@ApiResponse*. Additionally, the method's parameters are annotated with *@Parameter*. 
+
+```java
+    @Operation(summary = "Get information about an user", description = "Get information about a certain user by providing their id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
+    })
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") @Parameter(description = "The uuid of the user you want to get information about") UUID id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+```
 
