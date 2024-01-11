@@ -8,6 +8,8 @@ import com.unibuc.appbackend.enums.TaskAssignedStatus;
 import com.unibuc.appbackend.interfaces.TaskAssignedRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class TaskAssignedService {
 
@@ -23,7 +25,7 @@ public class TaskAssignedService {
         this.projectService = projectService;
     }
 
-    public TaskAssigned create(String userId, String projectId, String sprintId, String description) {
+    public TaskAssigned create(UUID userId, UUID projectId, UUID sprintId, String description) {
         TaskAssigned task = new TaskAssigned();
         User user = userService.getUserById(userId);
         Project project = projectService.getProjectById(projectId);

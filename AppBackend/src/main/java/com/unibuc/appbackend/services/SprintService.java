@@ -6,6 +6,7 @@ import com.unibuc.appbackend.interfaces.SprintRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SprintService {
@@ -20,7 +21,7 @@ public class SprintService {
         return sprintRepository.save(sprint);
     }
 
-    public Sprint getSprintById(String uuid) {
+    public Sprint getSprintById(UUID uuid) {
         Optional<Sprint> sprint = sprintRepository.findById(uuid);
         if (sprint.isPresent()) {
             return sprint.get();

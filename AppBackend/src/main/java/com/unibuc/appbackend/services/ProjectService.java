@@ -6,6 +6,7 @@ import com.unibuc.appbackend.interfaces.ProjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProjectService {
@@ -20,7 +21,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project getProjectById(String uuid) {
+    public Project getProjectById(UUID uuid) {
         Optional<Project> project = projectRepository.findById(uuid);
         if (project.isPresent()) {
             return project.get();

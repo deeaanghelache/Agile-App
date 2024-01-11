@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController("/user")
 public class UserController {
@@ -47,7 +48,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @GetMapping("/getById/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") @Parameter(description = "The uuid of the user you want to get information about") String id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") @Parameter(description = "The uuid of the user you want to get information about") UUID id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
@@ -66,7 +67,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @PostMapping("/changePassword/{id}")
-    public ResponseEntity<?> changePassword(@PathVariable("id") @Parameter(description = "The uuid of the user") String id, @RequestBody String password){
+    public ResponseEntity<?> changePassword(@PathVariable("id") @Parameter(description = "The uuid of the user") UUID id, @RequestBody String password){
         userService.changePassword(id, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -77,7 +78,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") @Parameter(description = "The uuid of the user") String id){
+    public ResponseEntity<?> delete(@PathVariable("id") @Parameter(description = "The uuid of the user") UUID id){
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

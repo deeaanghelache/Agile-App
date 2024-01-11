@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -36,7 +37,7 @@ public class UserService {
     }
 
     public User login(User user) {
-        Optional<User> userFromDB = userRepository.findById(user.getEmail());
+        Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
         if (userFromDB.isPresent()) {
             if (bCryptPasswordEncoder.matches(userFromDB.get().getPassword(), user.getPassword())){
                 return userFromDB.get();
@@ -45,7 +46,7 @@ public class UserService {
         return null;
     }
 
-    public User getUserById(String uuid) {
+    public User getUserById(UUID uuid) {
         Optional<User> user = userRepository.findById(uuid);
         if (user.isPresent()) {
             return user.get();
@@ -58,7 +59,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void changePassword(String uuid, String password) {
+    public void changePassword(UUID uuid, String password) {
         Optional<User> user = userRepository.findById(uuid);
         if (user.isPresent()) {
             user.get().setPassword(bCryptPasswordEncoder.encode(password));
@@ -68,7 +69,7 @@ public class UserService {
         }
     }
 
-    public void delete(String uuid) {
+    public void delete(UUID uuid) {
         Optional<User> user = userRepository.findById(uuid);
         if (user.isPresent()) {
             userRepository.deleteById(uuid);

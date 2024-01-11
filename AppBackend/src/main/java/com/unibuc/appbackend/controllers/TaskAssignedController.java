@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController("/task")
 public class TaskAssignedController {
 
@@ -18,9 +20,9 @@ public class TaskAssignedController {
     }
 
     @PostMapping("/createTask/{userId}/{projectId}/{sprintId}")
-    public ResponseEntity<TaskAssigned> create(@PathVariable("userId") String userId,
-                                               @PathVariable("projectId") String projectId,
-                                               @PathVariable("sprintId") String sprintId,
+    public ResponseEntity<TaskAssigned> create(@PathVariable("userId") UUID userId,
+                                               @PathVariable("projectId") UUID projectId,
+                                               @PathVariable("sprintId") UUID sprintId,
                                                @RequestBody String description) {
         return ResponseEntity.ok(taskAssignedService.create(userId, projectId, sprintId, description));
     }
