@@ -136,21 +136,88 @@ Each java class has a corresponding Controller class.
 
 #### REST Endpoints
 
+In the controllers, there are defined CRUD endpoints, as presented in the next sections. 
+
+I used *@RequestBody* and *@PathVariable* to send information with the request.
+
+The *@Parameter* annotation is only used for Swagger.
+
 ##### Create
+
+```java
+    @PostMapping("/register")
+    public ResponseEntity<User> create(@RequestBody @Parameter(description = "User data provided by the register form") User user) {
+        return ResponseEntity.ok(userService.create(user));
+    }
+```
 
 ##### Read
 
+```java
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") @Parameter(description = "The uuid of the user you want to get information about") UUID id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+```
+
 ##### Update
+
+```java
+    @PostMapping("/changePassword/{id}")
+    public ResponseEntity<?> changePassword(@PathVariable("id") @Parameter(description = "The uuid of the user") UUID id, @RequestBody String password){
+        userService.changePassword(id, password);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+```
 
 ##### Delete
 
+```java
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") @Parameter(description = "The uuid of the user") UUID id){
+        userService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+```
+
 ### Exception Handling
+
+I have created custom exceptions, such as **UserNotFound** or **UserAlreadyExists**. 
+
+```java
+public class UserNotFoundException extends RuntimeException {
+
+    public UserNotFoundException() {
+        super("User not found!");
+    }
+}
+```
+
+They are thrown in the services methods. For example, if the user with a given id is not found, the method will throw the UserNotFound exception.
+
+```java 
+    public void delete(UUID uuid) {
+        Optional<User> user = userRepository.findById(uuid);
+        if (user.isPresent()) {
+            userRepository.deleteById(uuid);
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+```
+
+Then, they are caught by the GlobalExceptionHandler, which is annotated with *@ControllerAdvice*.
+
+```java
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<?> handle(UserNotFoundException userNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userNotFoundException.getMessage());
+    }
+```
 
 ### Testing
 
 #### Unit Testing
-
-#### Integration Testing
 
 #### Test Coverage
 
