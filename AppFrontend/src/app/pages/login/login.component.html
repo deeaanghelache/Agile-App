@@ -1,0 +1,52 @@
+<main>
+    <div class="loginGrid">
+        <div class="leftSide">
+            
+        </div>
+        <div class="rightSide">
+            <h1>{{ loginTitle }}</h1>
+
+            <br>
+            <br>
+            <br>
+
+            <form [formGroup]="loginForm" (ngSubmit)="loginUserFunction()">
+                <div class="form-group">
+                    <input class="form-control" 
+                    placeholder="Email Address"
+                    [ngClass]="loginForm.controls['email'].errors ? 'is-invalid' : ''"
+                    formControlName="email" />
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" 
+                    placeholder="Password"
+                    type="password"
+                    [ngClass]="loginForm.controls['password'].errors ? 'is-invalid' : ''"
+                    formControlName="password" />
+                </div>
+
+                <p id="userNotFound"> {{ userNotFound }} </p>
+                <p id="dataNotOk" *ngIf="ok === false"> {{ tryAgain }} </p>
+
+                <button 
+                id="loginButton" 
+                class="btn btn-outline-warning rounded-pill"
+                [disabled]="loginForm.invalid" 
+                type="submit">
+                    Login
+                </button>
+
+                <div id="extra">
+                    <p>
+                        Not a member?
+                        <a href="/register" id="goToRegister">
+                            Sign up
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>

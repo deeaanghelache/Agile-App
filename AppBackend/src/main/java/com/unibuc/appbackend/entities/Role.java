@@ -23,6 +23,7 @@ public class Role {
 
     @Column(columnDefinition = "varchar(15)", unique = true)
     @NotNull
+    @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -42,6 +42,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Email or password incorrect!")
     })
     public ResponseEntity<User> login(@RequestBody @Parameter(description = "User data provided by the login form") User user) {
+        System.out.println(userService.login(user));
         return ResponseEntity.ok(userService.login(user));
     }
 

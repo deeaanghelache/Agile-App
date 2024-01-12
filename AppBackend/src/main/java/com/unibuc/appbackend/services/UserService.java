@@ -39,7 +39,7 @@ public class UserService {
     public User login(User user) {
         Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
         if (userFromDB.isPresent()) {
-            if (bCryptPasswordEncoder.matches(userFromDB.get().getPassword(), user.getPassword())){
+            if (bCryptPasswordEncoder.matches(user.getPassword(), userFromDB.get().getPassword())){
                 return userFromDB.get();
             }
         }

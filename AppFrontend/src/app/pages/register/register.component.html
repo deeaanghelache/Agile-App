@@ -1,0 +1,75 @@
+<main>
+    <div class="registerGrid">
+        <div class="leftSide">
+
+        </div>
+        <div class="rightSide">
+            <h1>{{ registerTitle }}</h1>
+
+            <div id="form">
+                <form [formGroup]="registerForm" (ngSubmit)="registerUserFunction()">
+    
+                    <div class="form-group">
+                        <input class="form-control input"
+                        placeholder="First Name" 
+                        [ngClass]="registerForm.controls['firstName'].errors ? 'is-invalid' : ''"
+                        formControlName="firstName" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control input" 
+                        placeholder="Last Name"
+                        [ngClass]="registerForm.controls['lastName'].errors ? 'is-invalid' : ''"
+                        formControlName="lastName" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control input" 
+                        placeholder="Email Address"
+                        [ngClass]="registerForm.controls['email'].errors ? 'is-invalid' : ''"
+                        formControlName="email" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control input" 
+                        placeholder="Password"
+                        type="password"
+                        [ngClass]="registerForm.controls['password'].errors ? 'is-invalid' : ''"
+                        formControlName="password" />
+                        <label style="font-size: 10px; text-align: center;"> Must contain at least 8 characters, one digit, one uppercase letter, one lowercase and a special character. </label>
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control input" 
+                        placeholder="Confirm your password"
+                        type="password"
+                        [ngClass]="registerForm.controls['confirmPassword'].errors ? 'is-invalid' : ''"
+                        formControlName="confirmPassword"/>
+                    </div>
+    
+                    <br>
+
+                    <p id="userAlreadyExists"> {{ userAlreadyExists }} </p>
+                    <p id="dataNotOk" *ngIf="ok === false"> {{ tryAgain }} </p>
+
+                    <button 
+                    mat-raised-button color="primary"
+                    id="registerButton" 
+                    type="submit">
+                        Sign Up
+                    </button>
+
+                    <div id="extra">
+                        <p>
+                            Already have an account?
+                            <a href="/login" id="goToLogin">
+                                Log In
+                            </a>
+                        </p>
+                    </div>
+                    <br>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>

@@ -26,6 +26,7 @@ public class Subtask {
 
     @Column()
     @NotNull
+    @Enumerated(EnumType.STRING)
     private TaskAssignedStatus status;
 
     @MapsId("userId")
