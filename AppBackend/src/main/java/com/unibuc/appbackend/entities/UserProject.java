@@ -3,6 +3,7 @@ package com.unibuc.appbackend.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.unibuc.appbackend.embeddedIds.UserProjectEmbeddedId;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserProject {
     @EmbeddedId
+    @NotNull
     private UserProjectEmbeddedId userProjectEmbeddedId;
 
     @MapsId("userId")
