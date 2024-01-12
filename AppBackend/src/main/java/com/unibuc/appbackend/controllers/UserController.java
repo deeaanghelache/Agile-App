@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RestController("/user")
+@RestController
+@RequestMapping("/user")
 @Tag(name = "User")
 public class UserController {
 
@@ -31,7 +32,7 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "There is already an user with the specified email!")
     })
     public ResponseEntity<User> create(@RequestBody @Parameter(description = "User data provided by the register form") User user) {
-        return ResponseEntity.ok(userService.create(user));
+        return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
