@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
@@ -30,6 +31,9 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Test
     public void create() throws Exception {
         UserRequest userRequest = new UserRequest("John", "Allan", "john.allan@gmail.com", "password123");
@@ -44,6 +48,20 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.lastName").value(userRequest.getLastName()))
                 .andExpect(jsonPath("$.email").value(userRequest.getEmail()))
                 .andExpect(jsonPath("$.password").value(userRequest.getPassword()));
+    }
+
+    @Test
+    public void login() throws Exception {
+        User user = new User(null, null, null, "john.allan@gmail.com", "password123");
+
+        when(userService.login(user)).thenReturn(new User(UUID.randomUUID(), "John", "Allan", "john.allan@gmail.com", "password123"));
+
+        mockMvc.perform(post("/user/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$.password").value(user.getPassword()));
     }
 
     @Test
