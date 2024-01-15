@@ -4,7 +4,6 @@ import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.exceptions.UserAlreadyExistsException;
 import com.unibuc.appbackend.exceptions.UserNotFoundException;
 import com.unibuc.appbackend.interfaces.UserRepository;
-import com.unibuc.appbackend.interfaces.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

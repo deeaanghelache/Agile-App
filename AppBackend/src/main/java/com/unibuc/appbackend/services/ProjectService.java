@@ -1,9 +1,7 @@
 package com.unibuc.appbackend.services;
 
 import com.unibuc.appbackend.entities.Project;
-import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.exceptions.ProjectNotFoundException;
-import com.unibuc.appbackend.exceptions.UserNotFoundException;
 import com.unibuc.appbackend.interfaces.ProjectRepository;
 import org.springframework.stereotype.Service;
 
