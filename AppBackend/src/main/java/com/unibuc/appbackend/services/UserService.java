@@ -19,12 +19,13 @@ public class UserService {
     private UserRepository userRepository;
     private UserRoleService userRoleService;
 
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, UserRoleService userRoleService) {
+    @Autowired
+    public UserService(UserRepository userRepository, UserRoleService userRoleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.userRoleService = userRoleService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public User create(User user) {

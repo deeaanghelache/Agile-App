@@ -55,15 +55,17 @@ public class UserControllerTest {
     @Test
     public void login() throws Exception {
         User user = new User(null, null, null, "john.allan@gmail.com", "password123");
+        User expectedUser = new User(UUID.randomUUID(), "John", "Allan", "john.allan@gmail.com", "password123");
 
-        when(userService.login(user)).thenReturn(new User(UUID.randomUUID(), "John", "Allan", "john.allan@gmail.com", "password123"));
+        when(userService.login(user)).thenReturn(expectedUser);
 
         mockMvc.perform(post("/user/login")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(user)))
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()));
+                .andExpect(jsonPath("$.email").value(expectedUser.getEmail()))
+                .andExpect(jsonPath("$.firstName").value(expectedUser.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(expectedUser.getLastName()));
     }
 
     @Test

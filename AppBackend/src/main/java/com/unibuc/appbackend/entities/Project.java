@@ -15,7 +15,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

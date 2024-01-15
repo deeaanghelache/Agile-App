@@ -16,7 +16,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 public class Sprint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
