@@ -53,4 +53,6 @@ public class TaskAssigned {
         this.description = description;
         this.status = status;
     }
+
+
 }
