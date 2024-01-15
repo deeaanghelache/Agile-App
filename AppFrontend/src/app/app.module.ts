@@ -12,6 +12,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
     ReactiveFormsModule,
     HttpClientModule, 
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule, 
+    MatToolbarModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

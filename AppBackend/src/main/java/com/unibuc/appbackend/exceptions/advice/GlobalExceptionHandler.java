@@ -1,9 +1,6 @@
 package com.unibuc.appbackend.exceptions.advice;
 
-import com.unibuc.appbackend.exceptions.ProjectNotFoundException;
-import com.unibuc.appbackend.exceptions.SprintNotFoundException;
-import com.unibuc.appbackend.exceptions.UserAlreadyExistsException;
-import com.unibuc.appbackend.exceptions.UserNotFoundException;
+import com.unibuc.appbackend.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,5 +27,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({SprintNotFoundException.class})
     public ResponseEntity<?> handle(SprintNotFoundException sprintNotFoundException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(sprintNotFoundException.getMessage());
+    }
+
+    @ExceptionHandler({RoleNotFoundException.class})
+    public ResponseEntity<?> handle(RoleNotFoundException roleNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(roleNotFoundException.getMessage());
+    }
+
+    @ExceptionHandler({TaskAssignedNotFoundException.class})
+    public ResponseEntity<?> handle(TaskAssignedNotFoundException taskAssignedNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(taskAssignedNotFoundException.getMessage());
     }
 }

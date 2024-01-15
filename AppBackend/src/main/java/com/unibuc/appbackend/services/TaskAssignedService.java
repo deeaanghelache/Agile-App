@@ -5,9 +5,11 @@ import com.unibuc.appbackend.entities.Sprint;
 import com.unibuc.appbackend.entities.TaskAssigned;
 import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.enums.TaskAssignedStatus;
+import com.unibuc.appbackend.exceptions.TaskAssignedNotFoundException;
 import com.unibuc.appbackend.interfaces.TaskAssignedRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -38,5 +40,14 @@ public class TaskAssignedService {
         task.setStatus(TaskAssignedStatus.TO_DO);
 
         return taskAssignedRepository.save(task);
+    }
+
+    public TaskAssigned getTaskById(UUID uuid) {
+        Optional<TaskAssigned> taskAssigned = taskAssignedRepository.findById(uuid);
+        if(taskAssigned.isPresent()) {
+            return taskAssigned.get();
+        } else {
+            throw new TaskAssignedNotFoundException();
+        }
     }
 }

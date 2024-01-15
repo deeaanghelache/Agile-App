@@ -1,7 +1,9 @@
 package com.unibuc.appbackend.services;
 
 import com.unibuc.appbackend.entities.Project;
+import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.exceptions.ProjectNotFoundException;
+import com.unibuc.appbackend.exceptions.UserNotFoundException;
 import com.unibuc.appbackend.interfaces.ProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,15 @@ public class ProjectService {
         Optional<Project> project = projectRepository.findById(uuid);
         if (project.isPresent()) {
             return project.get();
+        } else {
+            throw new ProjectNotFoundException();
+        }
+    }
+
+    public void delete(UUID uuid) {
+        Optional<Project> project = projectRepository.findById(uuid);
+        if (project.isPresent()) {
+            projectRepository.deleteById(uuid);
         } else {
             throw new ProjectNotFoundException();
         }

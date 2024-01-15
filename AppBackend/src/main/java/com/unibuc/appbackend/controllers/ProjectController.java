@@ -3,13 +3,15 @@ package com.unibuc.appbackend.controllers;
 import com.unibuc.appbackend.entities.Project;
 import com.unibuc.appbackend.services.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController()
 @RequestMapping("/project")
@@ -27,5 +29,16 @@ public class ProjectController {
     @ApiResponse(responseCode = "201", description = "Project created successfully")
     public ResponseEntity<Project> create(@RequestBody Project project) {
         return ResponseEntity.ok(projectService.create(project));
+    }
+
+    @Operation(summary = "Delete a given project", description = "Delete a certain project by providing its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Project was found in the database"),
+            @ApiResponse(responseCode = "404", description = "Project was NOT found in the database")
+    })
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Project> delete(@PathVariable @Parameter (description = "The uuid of the user you want to get information about") UUID id) {
+        projectService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

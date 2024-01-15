@@ -83,6 +83,8 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/user/delete/{id}", uuid).contentType("application/json"))
                 .andExpect(status().isOk());
+
+        verify(userService, times(1)).delete(uuid);
     }
 
 }
