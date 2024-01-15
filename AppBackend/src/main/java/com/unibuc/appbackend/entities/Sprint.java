@@ -27,4 +27,9 @@ public class Sprint {
 
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TaskAssigned> tasksAssigned;
+
+    public Sprint(UUID sprintId, LocalDate deadline) {
+        this.sprintId = sprintId;
+        this.deadline = deadline;
+    }
 }

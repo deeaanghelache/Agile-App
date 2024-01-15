@@ -28,4 +28,9 @@ public class Role {
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserRole> userRoles;
+
+    public Role(UUID roleId, RoleName roleName) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+    }
 }

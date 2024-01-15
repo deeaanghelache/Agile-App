@@ -33,4 +33,10 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TaskAssigned> tasksAssigned;
+
+    public Project(UUID projectId, String name, String description) {
+        this.projectId = projectId;
+        this.name = name;
+        this.description = description;
+    }
 }

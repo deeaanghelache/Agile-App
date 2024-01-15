@@ -47,4 +47,10 @@ public class TaskAssigned {
 
     @OneToMany(mappedBy = "taskAssigned", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subtask> subtasks;
+
+    public TaskAssigned(UUID taskAssignedId, String description, TaskAssignedStatus status) {
+        this.taskAssignedId = taskAssignedId;
+        this.description = description;
+        this.status = status;
+    }
 }
