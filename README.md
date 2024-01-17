@@ -123,7 +123,13 @@ Two entities (*UserRole* and *UserProject*) have embedded ids, as these tables a
 
 Each embedded id is a separated class, which can be found in the embeddedIds package.
 
+I validated the POJO classes by using the *@NotNull* adnotation on the fields that should not have null values.
 
+```java
+    @Column(columnDefinition = "varchar(100)")
+    @NotNull
+    private String firstName;
+```
 
 ### REPOSITORIES
 Each java class has a corresponding Interface class which extends JpaRepository.
