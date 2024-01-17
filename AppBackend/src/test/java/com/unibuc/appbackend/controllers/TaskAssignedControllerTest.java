@@ -6,22 +6,23 @@ import com.unibuc.appbackend.entities.Sprint;
 import com.unibuc.appbackend.entities.TaskAssigned;
 import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.enums.TaskAssignedStatus;
-import com.unibuc.appbackend.services.SubtaskService;
+import com.unibuc.appbackend.exceptions.TaskAssignedNotFoundException;
 import com.unibuc.appbackend.services.TaskAssignedService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.scheduling.config.Task;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = TaskAssignedController.class)
 public class TaskAssignedControllerTest {
@@ -54,5 +55,40 @@ public class TaskAssignedControllerTest {
                         .content(description))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.description").value(taskAssigned.getDescription()));
+    }
+
+    @Test
+    void updateStatus_shouldReturnUpdatedTaskAssigned() throws Exception {
+        UUID taskId = UUID.randomUUID();
+        String status = "done";
+
+        TaskAssigned updatedTaskAssigned = new TaskAssigned();
+        updatedTaskAssigned.setTaskAssignedId(taskId);
+        updatedTaskAssigned.setDescription("Updated Description");
+        updatedTaskAssigned.setStatus(TaskAssignedStatus.DONE);
+
+        when(taskAssignedService.updateStatus(taskId, status)).thenReturn(updatedTaskAssigned);
+
+        mockMvc.perform(put("/task/updateStatus/{taskId}/{status}", taskId, status))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.taskAssignedId").value(updatedTaskAssigned.getTaskAssignedId().toString()))
+                .andExpect(jsonPath("$.description").value(updatedTaskAssigned.getDescription()))
+                .andExpect(jsonPath("$.status").value(updatedTaskAssigned.getStatus().toString()));
+
+       verify(taskAssignedService).updateStatus(taskId, status);
+    }
+
+    @Test
+    void updateStatus_shouldReturnNotFound() throws Exception {
+        UUID taskId = UUID.randomUUID();
+        String status = "done";
+
+        when(taskAssignedService.updateStatus(taskId, status))
+                .thenThrow(new TaskAssignedNotFoundException());
+
+        mockMvc.perform(put("/task/updateStatus/{taskId}/{status}", taskId, status))
+                .andExpect(status().isNotFound());
+
+        verify(taskAssignedService).updateStatus(taskId, status);
     }
 }

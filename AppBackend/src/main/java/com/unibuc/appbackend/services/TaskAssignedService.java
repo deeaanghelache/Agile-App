@@ -50,4 +50,23 @@ public class TaskAssignedService {
             throw new TaskAssignedNotFoundException();
         }
     }
+
+    public TaskAssigned updateStatus(UUID taskId, String status) {
+        Optional<TaskAssigned> taskAssigned = taskAssignedRepository.findById(taskId);
+        if(taskAssigned.isPresent()) {
+            TaskAssigned task = taskAssigned.get();
+            TaskAssignedStatus newStatus = switch (status.toLowerCase()) {
+                case "todo" -> TaskAssignedStatus.TO_DO;
+                case "inprogress" -> TaskAssignedStatus.IN_PROGRESS;
+                case "done" -> TaskAssignedStatus.DONE;
+                case "nicetohave" -> TaskAssignedStatus.NICE_TO_HAVE;
+                default -> null;
+            };
+
+            task.setStatus(newStatus);
+            return taskAssignedRepository.save(task);
+        } else {
+            throw new TaskAssignedNotFoundException();
+        }
+    }
 }

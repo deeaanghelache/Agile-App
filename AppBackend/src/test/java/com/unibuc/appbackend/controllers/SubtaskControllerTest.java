@@ -1,25 +1,26 @@
 package com.unibuc.appbackend.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unibuc.appbackend.controllers.SubtaskController;
 import com.unibuc.appbackend.entities.Subtask;
 import com.unibuc.appbackend.entities.TaskAssigned;
 import com.unibuc.appbackend.entities.User;
 import com.unibuc.appbackend.enums.TaskAssignedStatus;
+import com.unibuc.appbackend.exceptions.SubtaskNotFoundException;
 import com.unibuc.appbackend.services.SubtaskService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.scheduling.config.Task;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import java.util.UUID;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = SubtaskController.class)
 public class SubtaskControllerTest {
@@ -55,5 +56,36 @@ public class SubtaskControllerTest {
                 .andExpect(jsonPath("$.description").value(subtask.getDescription()));
 //                .andExpect(jsonPath("$.user").value(subtask.getUser()))
 //                .andExpect(jsonPath("$.taskAssigned").value(subtask.getTaskAssigned()));
+    }
+
+    @Test
+    void updateStatus_shouldReturnUpdatedSubtask() throws Exception {
+        UUID subtaskId = UUID.randomUUID();
+        String status = "done";
+
+        Subtask updatedSubtask = new Subtask(subtaskId, "Description", TaskAssignedStatus.DONE, null, null);
+
+        when(subtaskService.updateStatus(subtaskId, status)).thenReturn(updatedSubtask);
+
+        mockMvc.perform(put("/subtask/updateStatus/{subtaskId}/{status}", subtaskId, status))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.subtaskId").value(updatedSubtask.getSubtaskId().toString()))
+                .andExpect(jsonPath("$.description").value(updatedSubtask.getDescription()))
+                .andExpect(jsonPath("$.status").value(updatedSubtask.getStatus().toString()));
+
+        verify(subtaskService).updateStatus(subtaskId, status);
+    }
+
+    @Test
+    void updateStatus_shouldReturnNotFound() throws Exception {
+        UUID subtaskId = UUID.randomUUID();
+        String status = "done";
+
+        when(subtaskService.updateStatus(subtaskId, status)).thenThrow(new SubtaskNotFoundException());
+
+        mockMvc.perform(put("/subtask/updateStatus/{subtaskId}/{status}", subtaskId, status))
+                .andExpect(status().isNotFound());
+
+        verify(subtaskService).updateStatus(subtaskId, status);
     }
 }

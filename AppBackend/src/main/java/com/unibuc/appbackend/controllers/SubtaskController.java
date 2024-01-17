@@ -34,4 +34,14 @@ public class SubtaskController {
                                           @RequestBody String description) {
         return ResponseEntity.ok(subtaskService.create(userId, taskId, description));
     }
+
+    @PutMapping("/updateStatus/{subtaskId}/{status}")
+    @Operation(summary = "Update status of subtask", description = "Update the status of a given subtask by providing the subtask id and the new status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Subtask status updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Subtask not found!")
+    })
+    public ResponseEntity<Subtask> updateStatus(@PathVariable("subtaskId") UUID subtaskId, @PathVariable("status") String status) {
+        return ResponseEntity.ok(subtaskService.updateStatus(subtaskId, status));
+    }
 }

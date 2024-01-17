@@ -38,4 +38,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handle(TaskAssignedNotFoundException taskAssignedNotFoundException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(taskAssignedNotFoundException.getMessage());
     }
+
+    @ExceptionHandler({SubtaskNotFoundException.class})
+    public ResponseEntity<?> handle(SubtaskNotFoundException subtaskNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(subtaskNotFoundException.getMessage());
+    }
 }

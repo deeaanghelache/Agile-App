@@ -104,4 +104,37 @@ public class TaskAssignedServiceTest {
         verify(taskAssignedRepository).findById(nonExistentTaskId);
     }
 
+    @Test
+    void updateStatus_shouldReturnUpdatedTaskAssigned() {
+        UUID taskId = UUID.randomUUID();
+        String status = "done";
+
+        TaskAssigned existingTaskAssigned = new TaskAssigned(taskId, "Description", TaskAssignedStatus.TO_DO, null, null, null, null);
+        TaskAssigned updatedTaskAssigned = new TaskAssigned(taskId, "Description", TaskAssignedStatus.DONE, null, null, null, null);
+
+        when(taskAssignedRepository.findById(taskId)).thenReturn(Optional.of(existingTaskAssigned));
+        when(taskAssignedRepository.save(existingTaskAssigned)).thenReturn(updatedTaskAssigned);
+
+        TaskAssigned result = taskAssignedService.updateStatus(taskId, status);
+
+        assertNotNull(result);
+        assertEquals(updatedTaskAssigned, result);
+        assertEquals(TaskAssignedStatus.DONE, result.getStatus());
+
+        verify(taskAssignedRepository).findById(taskId);
+        verify(taskAssignedRepository).save(existingTaskAssigned);
+    }
+
+    @Test
+    void updateStatus_shouldThrowTaskAssignedNotFoundException() {
+        UUID taskId = UUID.randomUUID();
+        String status = "done";
+
+        when(taskAssignedRepository.findById(taskId)).thenReturn(Optional.empty());
+
+        assertThrows(TaskAssignedNotFoundException.class, () -> taskAssignedService.updateStatus(taskId, status));
+
+        verify(taskAssignedRepository).findById(taskId);
+        verify(taskAssignedRepository, never()).save(any());
+    }
 }
