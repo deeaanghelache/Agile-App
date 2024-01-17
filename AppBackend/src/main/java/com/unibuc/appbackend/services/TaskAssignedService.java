@@ -28,16 +28,11 @@ public class TaskAssignedService {
     }
 
     public TaskAssigned create(UUID userId, UUID projectId, UUID sprintId, String description) {
-        TaskAssigned task = new TaskAssigned();
         User user = userService.getUserById(userId);
         Project project = projectService.getProjectById(projectId);
         Sprint sprint = sprintService.getSprintById(sprintId);
 
-        task.setUser(user);
-        task.setDescription(description);
-        task.setProject(project);
-        task.setSprint(sprint);
-        task.setStatus(TaskAssignedStatus.TO_DO);
+        TaskAssigned task = new TaskAssigned(null, description, TaskAssignedStatus.TO_DO, user, project, sprint, null);
 
         return taskAssignedRepository.save(task);
     }

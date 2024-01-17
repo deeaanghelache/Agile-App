@@ -5,8 +5,8 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+export class ProjectService {
 
-export class UserAuthenticationService {
   private privateHttpHeaders = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -17,31 +17,24 @@ export class UserAuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  register(user: any){
-    return this.http.post(
-      this.baseUrl + 'user/register', 
-      user
-    );
-  }
-
-  login(user: any){
-    return this.http.post(
-      this.baseUrl + 'user/login',
-      user, 
+  getProjects(userId:any) {
+    return this.http.get(
+      this.baseUrl + "userProject/getAllProjects/" + userId,
       this.privateHttpHeaders
     )
   }
 
-  checkIfAdmin(userId : any) {
-    return this.http.get(
-      this.baseUrl + "userRole/checkAdmin/" + userId,
+  addProject(project:any){
+    return this.http.post(
+      this.baseUrl + "project/createProject",
+      project,
       this.privateHttpHeaders
     )
   }
 
-  checkIfScrumMaster(userId : any) {
+  getAllProjects() {
     return this.http.get(
-      this.baseUrl + "userRole/checkScrumMaster/" + userId,
+      this.baseUrl + "project/getAllProjects",
       this.privateHttpHeaders
     )
   }

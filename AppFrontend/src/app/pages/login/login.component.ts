@@ -14,6 +14,9 @@ export class LoginComponent implements OnInit {
   public userNotFound:String = "";
   public ok:boolean = false;
   public tryAgain: String = "";
+  public userId!:any;
+  public currentEmail = "";
+  public userRole = "";
 
   constructor(private formBuilder:FormBuilder, private router: Router, private userAuthentication:UserAuthenticationService) {}
 
@@ -26,6 +29,13 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  userCurrentSessionUpdate(){
+    sessionStorage.setItem("email", this.currentEmail);
+    sessionStorage.setItem("role", this.userRole); 
+    sessionStorage.setItem("logged", "true");
+    sessionStorage.setItem("userId", this.userId);
+  }
+
   loginUserFunction() {
     if (this.loginForm.valid) {
       this.ok = true;
@@ -33,10 +43,26 @@ export class LoginComponent implements OnInit {
         this.loginForm.value
       ).subscribe((response : any) => {
         if (response != null) {
+          this.userId = response['userId'];
+          this.currentEmail = response['email'];
+          this.userAuthentication.checkIfAdmin(response['userId'])
+            .subscribe((secondResponse : any) => {
+              if (secondResponse == true) {
+                this.userRole = "admin";
+              } else {
+                this.userAuthentication.checkIfScrumMaster(response['userId'])
+                  .subscribe((thirdResponse : any) => {
+                    if (thirdResponse == true) {
+                      this.userRole = "scrum";
+                    }
+                  }) 
+              }
+            })
+          this.userCurrentSessionUpdate();
           this.router.navigateByUrl("/dashboard");
         } else {
           this.loginForm.reset();
-          this.userNotFound = "User not found";
+          this.userNotFound = "Email or password incorrect!";
         }
       })
     }

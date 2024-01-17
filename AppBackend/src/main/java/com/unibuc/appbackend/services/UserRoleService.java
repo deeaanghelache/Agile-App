@@ -16,12 +16,10 @@ public class UserRoleService {
 
     private UserRoleRepository userRoleRepository;
     private RoleService roleService;
-    private UserService userService;
 
-    public UserRoleService(UserRoleRepository userRoleRepository, RoleService roleService, UserService userService) {
+    public UserRoleService(UserRoleRepository userRoleRepository, RoleService roleService) {
         this.userRoleRepository = userRoleRepository;
         this.roleService = roleService;
-        this.userService = userService;
     }
 
     public void addRoleForUser(User user) {
@@ -33,8 +31,7 @@ public class UserRoleService {
     }
 
     public List<UserRole> getAllRolesForGivenUser(UUID userId){
-        var currentUser = userService.getUserById(userId);
-        return userRoleRepository.queryBy(currentUser.getUserId());
+        return userRoleRepository.queryBy(userId);
     }
 
     public Boolean checkAdminRoleForGivenUser(UUID userId) {
@@ -57,5 +54,21 @@ public class UserRoleService {
             }
         }
         return false;
+    }
+
+    public UserRole addUserRole(UUID userId, String roleName) {
+        RoleName roleNameEnum = switch (roleName.toLowerCase()) {
+            case "admin" -> RoleName.ADMIN;
+            case "user" -> RoleName.USER;
+            case "scrummaster" -> RoleName.SCRUM_MASTER;
+            default -> null;
+        };
+
+        Role role = roleService.getRoleByName(roleNameEnum);
+        User user = new User(userId, null, null, null, null);
+        UserRoleEmbeddedId userRoleEmbeddedId = new UserRoleEmbeddedId(role.getRoleId(), userId);
+
+        UserRole userRole = new UserRole(userRoleEmbeddedId, user, role);
+        return userRoleRepository.save(userRole);
     }
 }

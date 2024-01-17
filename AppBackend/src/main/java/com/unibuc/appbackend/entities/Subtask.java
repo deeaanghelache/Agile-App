@@ -1,5 +1,6 @@
 package com.unibuc.appbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unibuc.appbackend.enums.TaskAssignedStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ public class Subtask {
     @NotNull
     private String description;
 
-    @Column()
+    @Column(columnDefinition = "varchar(15)")
     @NotNull
     @Enumerated(EnumType.STRING)
     private TaskAssignedStatus status;
@@ -34,11 +35,13 @@ public class Subtask {
     @MapsId("userId")
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @MapsId("taskAssignedId")
     @ManyToOne
     @JoinColumn(name = "task_assigned_id")
+    @JsonIgnore
     private TaskAssigned taskAssigned;
 
     @Override

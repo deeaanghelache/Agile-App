@@ -3,8 +3,10 @@ package com.unibuc.appbackend.services;
 import com.unibuc.appbackend.entities.Project;
 import com.unibuc.appbackend.exceptions.ProjectNotFoundException;
 import com.unibuc.appbackend.interfaces.ProjectRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,5 +39,9 @@ public class ProjectService {
         } else {
             throw new ProjectNotFoundException();
         }
+    }
+
+    public List<Project> getAll() {
+        return projectRepository.findAll();
     }
 }

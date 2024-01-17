@@ -1,5 +1,6 @@
 package com.unibuc.appbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unibuc.appbackend.enums.RoleName;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +31,7 @@ public class Role {
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @JsonIgnore
     private Set<UserRole> userRoles;
 
     public Role(UUID roleId, RoleName roleName) {

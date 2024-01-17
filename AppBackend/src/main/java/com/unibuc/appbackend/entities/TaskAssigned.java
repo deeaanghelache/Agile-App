@@ -1,5 +1,6 @@
 package com.unibuc.appbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unibuc.appbackend.enums.TaskAssignedStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -27,35 +28,36 @@ public class TaskAssigned {
     @NotNull
     private String description;
 
-    @Column()
+    @Column(columnDefinition = "varchar(15)")
     @NotNull
     @Enumerated(EnumType.STRING)
     private TaskAssignedStatus status;
 
     @MapsId("userId")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
+    @NotNull
     private User user;
 
     @MapsId("projectId")
-    @ManyToOne
-    @JoinColumn(name = "project_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @NotNull
+    @JoinColumn(name = "project_id", referencedColumnName = "projectId")
+    @JsonIgnore
     private Project project;
 
     @MapsId("sprintId")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sprint_id")
+    @JsonIgnore
+    @NotNull
     private Sprint sprint;
 
     @OneToMany(mappedBy = "taskAssigned", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     @ToString.Exclude
     private Set<Subtask> subtasks;
-
-    public TaskAssigned(UUID taskAssignedId, String description, TaskAssignedStatus status) {
-        this.taskAssignedId = taskAssignedId;
-        this.description = description;
-        this.status = status;
-    }
 
     @Override
     public final boolean equals(Object o) {

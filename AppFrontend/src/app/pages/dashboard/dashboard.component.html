@@ -1,18 +1,50 @@
 <mat-toolbar color="primary">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <span>My App</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        <mat-icon>favorite</mat-icon>
-    </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-    </button>
+    <span>AgileApp</span>
+
+    <button mat-raised-button style="margin-right: 10px; margin-left: 10px;" color="accent"
+        routerLink="/dashboard">Dashboard</button>
+    <button mat-raised-button style="margin-right: 10px;" color="accent">Projects</button>
+    <button mat-raised-button style="margin-right: 10px;" color="accent" *ngIf="logged === false"
+        routerLink="/login">Log In</button>
+    <button mat-raised-button style="margin-right: 10px;" color="accent" *ngIf="logged === false"
+        routerLink="/register">Register</button>
+    <button mat-raised-button style="margin-right: 10px;" color="accent" *ngIf="logged === true"
+        (click)="logout()">Logout</button>
+
 </mat-toolbar>
 
-<mat-grid-list cols="2" rowHeight="2:1">
-    <mat-grid-tile class="column">1</mat-grid-tile>
-    <mat-grid-tile class="column">2</mat-grid-tile>
+<mat-grid-list cols="2" rowHeight="2:1" *ngIf="logged === true">
+    <mat-grid-tile class="column">
+        <h3 class="subtitle">My Projects</h3>
+        <div *ngIf="logged === true" class="form-container">
+            <form [formGroup]="addProjectFrom" (ngSubmit)="addProject()">
+                <div class="form-group">
+                    <input class="form-control" 
+                    placeholder="Project Name"
+                    [ngClass]="addProjectFrom.controls['name'].errors ? 'is-invalid' : ''"
+                    formControlName="name" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" 
+                    placeholder="Description"
+                    [ngClass]="addProjectFrom.controls['description'].errors ? 'is-invalid' : ''"
+                    formControlName="description" />
+                </div>
+
+                <button type="submit">Add Project</button>
+            </form>
+        </div>
+        <div *ngFor="let project of projects">
+            <mat-card>
+                <mat-card-content>{{ project['name'] }}</mat-card-content>
+                <mat-card-content>{{ project['description'] }}</mat-card-content>
+            </mat-card>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile class="column">
+        <h3 class="subtitle">My tasks</h3>
+        <div>
+
+        </div>
+    </mat-grid-tile>
 </mat-grid-list>
