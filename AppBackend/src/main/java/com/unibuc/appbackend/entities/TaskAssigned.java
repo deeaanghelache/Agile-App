@@ -59,6 +59,12 @@ public class TaskAssigned {
     @ToString.Exclude
     private Set<Subtask> subtasks;
 
+    public TaskAssigned(UUID taskAssignedId, String description, TaskAssignedStatus status) {
+        this.taskAssignedId = taskAssignedId;
+        this.description = description;
+        this.status = status;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

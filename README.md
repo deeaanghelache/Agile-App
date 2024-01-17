@@ -6,6 +6,23 @@
 - **Frontend:** Angular 
 - **Tests:** JUnit, Mockito
 
+## PROJECT REQUIRMENTS
+
+I. Define a system of your choice.
+- [ ] [Jump To Section](#rest-endpoints---business-requirements) Define 10 business requirements for the chosen business domain
+- [x] [Jump To Section](#detailed-business-requirements) Prepare a document based on the 10 business requirements containing a description of 5 main features your project should contain for the MVP (minimum viable product) phase.
+- [x] [Jump To Section](#) Create a repository for your project and commit the document for review.
+
+II. The project should consist of a Spring Boot Application containing:
+- [x] [Jump To Section](#rest-endpoints) REST endpoints for all the features defined for the MVP. You should define at least 5 endpoints.
+- [x] [Jump To Section](#services) Beans for defining services (implementing business logic). One service per feature.
+- [x] [Jump To Section](#repositories) Beans for defining repositories One repository per entity.
+- [x] [Jump To Section](#testing) Write unit tests for all REST endpoints and services and make sure all passed.
+- [x] [Jump To Section](#database-structure) The data within the application should be persisted in a database. Define at least 6 entities that will be persisted in the database database, and at least 4 relations between them.
+- [x] [Jump To Section](#entities) You should validate the POJO classes. You can use the existing validation constraints or create your own annotations if you need a custom constraint.
+- [x] [Jump To Section](#swagger-documentation) Document the functionalities in the application such that anyone can use it after reading the document. Every API will be documented by Swagger. You can also export the visual documentation and add it to your main document presentation.
+- [x] [Jump To Section](#frontend) The functionality of the application will be demonstrated using Postman or GUI (Thymeleaf,Angular, etc).
+
 ## PROJECT DESCRIPTION
 
 **Agile App** is a web application for organizing software development projects. 
@@ -76,6 +93,17 @@ Each type of user has access to different functionalities of the app.
 4. Delete sprints
 5. Delete users
 
+## Main features for minimum viable product phase (MVP)
+
+1. User can create and account and the password should be encrypted when saved in the database. After registration, users can log in the app using the email they provided and the password. You can get details about a user based on the userId or a list of all the users in the database. Users can also be deleted by id.
+
+2. Roles can be added in the database, by providing one of the role names: admin, user or scrum master. You can get information about roles and you can delete them by id.
+
+3. Projects can be created, by providing the name and a short description. You also get information about a certain project, by providing the projectId. Projects cand be deleted by id.
+
+4. A user can have multiple roles (max 3, because at any time in the database, there are only 3 roles). A user-role is created by providing the userId and the role name.
+
+5. You can add users to projects and you can get a list of all the projects a given user is part of.
 
 ## Backend 
 
@@ -219,9 +247,73 @@ Then, they are caught by the GlobalExceptionHandler, which is annotated with *@C
 
 #### Unit Testing
 
+I have tested the methods in the controllers and services. For this, I used JUnit and Mockito.
+
+*Example Test Of a Controller Method*
+
+```java
+    @Test
+    public void createProject() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        ProjectRequest projectRequest = new ProjectRequest("Project1", "Description");
+        Project project = new Project(uuid, "Project1", "Description");
+
+        when(projectService.create(any())).thenReturn(project);
+
+        mockMvc.perform(post("/project/createProject")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(projectRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description").value(projectRequest.getDescription()))
+                .andExpect(jsonPath("$.name").value(projectRequest.getName()));
+    }
+```
+
+*Example Test of a Service Method*
+
+```java
+    @Test
+    void create() {
+        User user = new User();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEmail("john.doe@example.com");
+        user.setPassword("password123");
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        User savedUser = new User();
+        savedUser.setUserId(UUID.randomUUID());
+        savedUser.setFirstName(user.getFirstName());
+        savedUser.setLastName(user.getLastName());
+        savedUser.setEmail(user.getEmail());
+        savedUser.setPassword("encodedPassword");
+        when(userRepository.save(user)).thenReturn(savedUser);
+
+        doNothing().when(userRoleService).addRoleForUser(user);
+
+        User result = userService.create(user);
+
+        assertNotNull(result);
+        assertEquals(savedUser.getUserId(), result.getUserId());
+        assertEquals(savedUser.getFirstName(), result.getFirstName());
+        assertEquals(savedUser.getLastName(), result.getLastName());
+        assertEquals(savedUser.getEmail(), result.getEmail());
+        assertEquals(savedUser.getPassword(), result.getPassword());
+
+        verify(userRepository).save(user);
+        verify(bCryptPasswordEncoder).encode(any(CharSequence.class));
+        verify(userRoleService).addRoleForUser(user);
+    }
+```
+
+
 #### Test Coverage
 
+
+
 ## Frontend
+For the frontend part I chose to use Angular. You can find the frontend files in the AppFrontend folder.
 
 ## Swagger Documentation
 

@@ -35,7 +35,6 @@ public class UserServiceTest {
 
     @Test
     void create() {
-        // Arrange
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -49,7 +48,7 @@ public class UserServiceTest {
         savedUser.setFirstName(user.getFirstName());
         savedUser.setLastName(user.getLastName());
         savedUser.setEmail(user.getEmail());
-        savedUser.setPassword("encodedPassword"); // Mocking the password encoding behavior
+        savedUser.setPassword("encodedPassword");
         when(userRepository.save(user)).thenReturn(savedUser);
 
         doNothing().when(userRoleService).addRoleForUser(user);
@@ -76,7 +75,7 @@ public class UserServiceTest {
 
         User userFromDB = new User();
         userFromDB.setEmail("john.doe@example.com");
-        userFromDB.setPassword(bCryptPasswordEncoder.encode("password123")); // Mocking the stored encoded password
+        userFromDB.setPassword(bCryptPasswordEncoder.encode("password123"));
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(userFromDB));
         when(bCryptPasswordEncoder.matches(user.getPassword(), userFromDB.getPassword())).thenReturn(true);
