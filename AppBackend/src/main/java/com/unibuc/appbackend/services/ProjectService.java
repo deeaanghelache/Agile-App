@@ -44,4 +44,15 @@ public class ProjectService {
     public List<Project> getAll() {
         return projectRepository.findAll();
     }
+
+    public Project update(UUID projectId, String description) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (project.isPresent()) {
+            Project projectToBeSaved = project.get();
+            projectToBeSaved.setDescription(description);
+            return projectRepository.save(projectToBeSaved);
+        } else {
+            throw new ProjectNotFoundException();
+        }
+    }
 }

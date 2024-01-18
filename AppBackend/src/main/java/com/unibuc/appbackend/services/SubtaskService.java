@@ -8,6 +8,7 @@ import com.unibuc.appbackend.exceptions.SubtaskNotFoundException;
 import com.unibuc.appbackend.interfaces.SubtaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,5 +55,18 @@ public class SubtaskService {
         } else {
             throw new SubtaskNotFoundException();
         }
+    }
+
+    public void delete(UUID subtaskId) {
+        Optional<Subtask> subtask = subtaskRepository.findById(subtaskId);
+        if (subtask.isPresent()) {
+            subtaskRepository.deleteById(subtaskId);
+        } else {
+            throw new SubtaskNotFoundException();
+        }
+    }
+
+    public List<Subtask> getAllSubtasksForGivenUser(UUID userId) {
+        return subtaskRepository.getAllSubtasks(userId);
     }
 }

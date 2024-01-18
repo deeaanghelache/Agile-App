@@ -36,7 +36,7 @@ public class Project {
     @JsonIgnore
     private Set<UserProject> userProjects;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @ToString.Exclude
     @JsonIgnore
     private Set<TaskAssigned> tasksAssigned;

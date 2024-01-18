@@ -33,23 +33,19 @@ public class TaskAssigned {
     @Enumerated(EnumType.STRING)
     private TaskAssignedStatus status;
 
-    @MapsId("userId")
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
     @JsonIgnore
     @NotNull
     private User user;
 
-    @MapsId("projectId")
-    @ManyToOne(cascade = CascadeType.ALL)
-    @NotNull
-    @JoinColumn(name = "project_id", referencedColumnName = "projectId")
+    @ManyToOne
+    @JoinColumn(name = "project_id", referencedColumnName = "projectId", nullable = false)
     @JsonIgnore
     private Project project;
 
-    @MapsId("sprintId")
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sprint_id")
+    @JoinColumn(name = "sprint_id", referencedColumnName = "sprintId", nullable = false)
     @JsonIgnore
     @NotNull
     private Sprint sprint;

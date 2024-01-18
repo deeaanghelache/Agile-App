@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController()
@@ -21,6 +23,26 @@ public class TaskAssignedController {
 
     public TaskAssignedController(TaskAssignedService taskAssignedService) {
         this.taskAssignedService = taskAssignedService;
+    }
+
+    @GetMapping("/getAllTasksForGivenUser/{id}")
+    @Operation(summary = "Get all tasks for given user", description = "Get all tasks for given user, by providing the user id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
+            @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
+    })
+    public ResponseEntity<List<TaskAssigned>> getAllTasksForGivenUser(@PathVariable("id") @Parameter(description = "The id of the user") UUID userId) {
+        return ResponseEntity.ok(taskAssignedService.getAllTasksForGivenUser(userId));
+    }
+
+    @GetMapping("/getAllTasksForGivenProject/{id}")
+    @Operation(summary = "Get all tasks for given project", description = "Get all tasks for given project, by providing the project id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
+            @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
+    })
+    public ResponseEntity<List<TaskAssigned>> getAllTasksForGivenProject(@PathVariable("id") @Parameter(description = "The id of the project") UUID projectId) {
+        return ResponseEntity.ok(taskAssignedService.getAllTasksForGivenProject(projectId));
     }
 
     @PostMapping("/createTask/{userId}/{projectId}/{sprintId}")
@@ -42,7 +64,18 @@ public class TaskAssignedController {
             @ApiResponse(responseCode = "200", description = "Task status updated successfully"),
             @ApiResponse(responseCode = "404", description = "Task not found!")
     })
-    public ResponseEntity<TaskAssigned> updateStatus(@PathVariable("taskId") UUID taskId, @PathVariable("status") String status) {
+    public ResponseEntity<TaskAssigned> updateStatus(@PathVariable("taskId") @Parameter(description = "The id of the task you want to edit") UUID taskId, @PathVariable("status") @Parameter(description = "The new status, should be one of todo, done, inprogress, nicetohave") String status) {
         return ResponseEntity.ok(taskAssignedService.updateStatus(taskId, status));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete a task", description = "Delete a task by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task was found in the db and successfully deleted!"),
+            @ApiResponse(responseCode = "404", description = "Task not found in the db!")
+    })
+    public ResponseEntity<?> delete(@PathVariable("id") @Parameter(description = "Id of the task you want to delete") UUID taskId) {
+        taskAssignedService.delete(taskId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -38,7 +38,7 @@ public class UserController {
     @PostMapping("/login")
     @Operation(summary = "Login an user", description = "Checks if the password and email provided in the request's body are correct")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "The user has been successfully logged in!"),
+            @ApiResponse(responseCode = "200", description = "The user has been successfully logged in!"),
             @ApiResponse(responseCode = "401", description = "Email or password incorrect!")
     })
     public ResponseEntity<User> login(@RequestBody @Parameter(description = "User data provided by the login form") User user) {
@@ -47,7 +47,7 @@ public class UserController {
 
     @Operation(summary = "Get information about an user", description = "Get information about a certain user by providing their id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @GetMapping("/getById/{id}")
@@ -57,7 +57,7 @@ public class UserController {
 
     @Operation(summary = "Get all users", description = "Returns all users in the database")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "A list containing all the users in the database")
+            @ApiResponse(responseCode = "200", description = "A list containing all the users in the database")
     })
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -66,7 +66,7 @@ public class UserController {
 
     @Operation(summary = "Change password for given user", description = "Change the password of a certain user by providing their id and new password")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @PostMapping("/changePassword/{id}")
@@ -77,7 +77,7 @@ public class UserController {
 
     @Operation(summary = "Delete a given user", description = "Delete a certain user by providing their id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @DeleteMapping("/delete/{id}")

@@ -9,7 +9,7 @@
 ## PROJECT REQUIRMENTS
 
 I. Define a system of your choice.
-- [ ] [Jump To Section](#rest-endpoints---business-requirements) Define 10 business requirements for the chosen business domain
+- [x] [Jump To Section](#rest-endpoints---business-requirements) Define 10 business requirements for the chosen business domain
 - [x] [Jump To Section](#detailed-business-requirements) Prepare a document based on the 10 business requirements containing a description of 5 main features your project should contain for the MVP (minimum viable product) phase.
 - [x] [Jump To Section](#) Create a repository for your project and commit the document for review.
 

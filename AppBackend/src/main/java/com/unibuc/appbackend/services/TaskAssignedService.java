@@ -9,6 +9,7 @@ import com.unibuc.appbackend.exceptions.TaskAssignedNotFoundException;
 import com.unibuc.appbackend.interfaces.TaskAssignedRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +33,12 @@ public class TaskAssignedService {
         Project project = projectService.getProjectById(projectId);
         Sprint sprint = sprintService.getSprintById(sprintId);
 
-        TaskAssigned task = new TaskAssigned(null, description, TaskAssignedStatus.TO_DO, user, project, sprint, null);
+        TaskAssigned task = new TaskAssigned();
+        task.setDescription(description);
+        task.setStatus(TaskAssignedStatus.TO_DO);
+        task.setUser(user);
+        task.setProject(project);
+        task.setSprint(sprint);
 
         return taskAssignedRepository.save(task);
     }
@@ -63,5 +69,22 @@ public class TaskAssignedService {
         } else {
             throw new TaskAssignedNotFoundException();
         }
+    }
+
+    public void delete(UUID taskId) {
+        Optional<TaskAssigned> taskAssigned = taskAssignedRepository.findById(taskId);
+        if (taskAssigned.isPresent()) {
+            taskAssignedRepository.deleteById(taskId);
+        } else {
+            throw new TaskAssignedNotFoundException();
+        }
+    }
+
+    public List<TaskAssigned> getAllTasksForGivenUser(UUID userId) {
+        return taskAssignedRepository.getAllTasks(userId);
+    }
+
+    public List<TaskAssigned> getAllTasksForGivenProject(UUID projectId) {
+        return taskAssignedRepository.getAllTasksForProject(projectId);
     }
 }

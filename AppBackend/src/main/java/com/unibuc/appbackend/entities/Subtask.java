@@ -32,15 +32,13 @@ public class Subtask {
     @Enumerated(EnumType.STRING)
     private TaskAssignedStatus status;
 
-    @MapsId("userId")
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
     @JsonIgnore
     private User user;
 
-    @MapsId("taskAssignedId")
     @ManyToOne
-    @JoinColumn(name = "task_assigned_id")
+    @JoinColumn(name = "task_assigned_id", referencedColumnName = "taskAssignedId")
     @JsonIgnore
     private TaskAssigned taskAssigned;
 

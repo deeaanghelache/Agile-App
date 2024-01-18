@@ -25,7 +25,7 @@ public class UserRoleController {
 
     @Operation(summary = "Check if a user is admin", description = "Check if a user is admin by providing their id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @GetMapping("/checkAdmin/{id}")
@@ -35,7 +35,7 @@ public class UserRoleController {
 
     @Operation(summary = "Check if a user is scrum master", description = "Check if a user is scrum master by providing their id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @GetMapping("/checkScrumMaster/{id}")
@@ -45,7 +45,7 @@ public class UserRoleController {
 
     @Operation(summary = "Add role for user", description = "Add role for user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User was found in the database"),
+            @ApiResponse(responseCode = "200", description = "User was found in the database"),
             @ApiResponse(responseCode = "404", description = "User was NOT found in the database")
     })
     @PostMapping("/addRole/{id}/{role}")
