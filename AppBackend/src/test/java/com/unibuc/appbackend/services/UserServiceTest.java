@@ -178,4 +178,29 @@ public class UserServiceTest {
         verify(userRepository).findById(userId);
         verifyNoMoreInteractions(userRepository);
     }
+
+    @Test
+    public void getUserById_validUser() {
+        UUID userId = UUID.randomUUID();
+        User sampleUser = new User(userId, "John", "Doe", "john.doe@example.com", "password123");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(sampleUser));
+
+        User resultUser = userService.getUserById(userId);
+
+        assertEquals(sampleUser, resultUser);
+
+        verify(userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    public void getUserById_userNotFound_shouldThrowUserNotFoundException() {
+        UUID nonExistingUserId = UUID.randomUUID();
+
+        when(userRepository.findById(nonExistingUserId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.getUserById(nonExistingUserId));
+
+        verify(userRepository, times(1)).findById(nonExistingUserId);
+    }
 }

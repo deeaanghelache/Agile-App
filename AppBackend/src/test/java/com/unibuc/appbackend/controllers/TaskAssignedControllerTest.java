@@ -12,17 +12,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = TaskAssignedController.class)
 public class TaskAssignedControllerTest {
@@ -91,4 +95,59 @@ public class TaskAssignedControllerTest {
 
         verify(taskAssignedService).updateStatus(taskId, status);
     }
+
+    @Test
+    public void getAllTasksForGivenUser() throws Exception {
+        UUID userId = UUID.randomUUID();
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+
+        List<TaskAssigned> sampleTasks = Arrays.asList(
+                new TaskAssigned(id1, "Description 1", TaskAssignedStatus.TO_DO),
+                new TaskAssigned(id2, "Description 2", TaskAssignedStatus.NICE_TO_HAVE));
+
+        when(taskAssignedService.getAllTasksForGivenUser(userId)).thenReturn(sampleTasks);
+
+        mockMvc.perform(get("/task/getAllTasksForGivenUser/{id}", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(sampleTasks.size()))
+                .andExpect(jsonPath("$[0].description").value("Description 1"))
+                .andExpect(jsonPath("$[1].description").value("Description 2"));
+
+        verify(taskAssignedService, times(1)).getAllTasksForGivenUser(userId);
+    }
+
+    @Test
+    public void getAllTasksForGivenProject() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+
+        List<TaskAssigned> sampleTasks = Arrays.asList(
+                new TaskAssigned(id1, "Description 1", TaskAssignedStatus.TO_DO),
+                new TaskAssigned(id2, "Description 2", TaskAssignedStatus.NICE_TO_HAVE));
+
+        when(taskAssignedService.getAllTasksForGivenProject(projectId)).thenReturn(sampleTasks);
+
+        mockMvc.perform(get("/task/getAllTasksForGivenProject/{id}", projectId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(sampleTasks.size()))
+                .andExpect(jsonPath("$[0].description").value("Description 1"))
+                .andExpect(jsonPath("$[1].description").value("Description 2"));
+
+        verify(taskAssignedService, times(1)).getAllTasksForGivenProject(projectId);
+    }
+
+//    @Test
+//    public void deleteTask() throws Exception {
+//        UUID taskId = UUID.randomUUID();
+//
+//        mockMvc.perform(delete("/tasl/delete/{id}", taskId)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isNotFound());
+//
+//        verify(taskAssignedService, times(1)).delete(taskId);
+//    }
 }

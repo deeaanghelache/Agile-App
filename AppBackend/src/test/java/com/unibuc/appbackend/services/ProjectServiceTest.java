@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -97,5 +99,50 @@ public class ProjectServiceTest {
 
         verify(projectRepository).findById(nonExistentProjectId);
         verifyNoMoreInteractions(projectRepository);
+    }
+
+    @Test
+    public void getAllProjects() {
+        List<Project> sampleProjects = Arrays.asList(
+                new Project(UUID.randomUUID(), "Project 1", "Description 1"),
+                new Project(UUID.randomUUID(), "Project 2", "Description 2"));
+
+        when(projectRepository.findAll()).thenReturn(sampleProjects);
+
+        List<Project> resultProjects = projectService.getAll();
+
+        assertEquals(sampleProjects.size(), resultProjects.size());
+        assertEquals(sampleProjects.get(0).getName(), resultProjects.get(0).getName());
+        assertEquals(sampleProjects.get(1).getName(), resultProjects.get(1).getName());
+
+        verify(projectRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void update_existingProject_shouldUpdate() {
+        UUID projectId = UUID.randomUUID();
+        String newDescription = "Updated Description";
+        Project sampleProject = new Project(projectId, "Project 1", "Description 1");
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(sampleProject));
+        when(projectRepository.save(any(Project.class))).thenReturn(sampleProject);
+
+        Project updatedProject = projectService.update(projectId, newDescription);
+
+        assertEquals(newDescription, updatedProject.getDescription());
+
+        verify(projectRepository, times(1)).save(any(Project.class));
+    }
+
+    @Test
+    public void update_nonexistentProject_shouldThrowProjectNotFoundException() {
+        UUID nonExistingProjectId = UUID.randomUUID();
+        String newDescription = "Updated Description";
+
+        when(projectRepository.findById(nonExistingProjectId)).thenReturn(Optional.empty());
+
+        assertThrows(ProjectNotFoundException.class, () -> projectService.update(nonExistingProjectId, newDescription));
+
+        verify(projectRepository, times(0)).save(any(Project.class));
     }
 }

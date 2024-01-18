@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -97,5 +99,46 @@ public class SubtaskServiceTest {
 
         verify(subtaskRepository).findById(subtaskId);
         verify(subtaskRepository, never()).save(any());
+    }
+
+    @Test
+    public void delete_foundSubtask_shouldDelete() {
+        UUID subtaskId = UUID.randomUUID();
+        Subtask sampleSubtask = new Subtask(subtaskId, "Subtask 1", TaskAssignedStatus.IN_PROGRESS, null, null);
+
+        when(subtaskRepository.findById(subtaskId)).thenReturn(Optional.of(sampleSubtask));
+
+        subtaskService.delete(subtaskId);
+
+        verify(subtaskRepository, times(1)).deleteById(subtaskId);
+    }
+
+    @Test
+    public void delete_nonexistingSubtask_shoulThrowSubtaskNotFoundException() {
+        UUID nonExistingSubtaskId = UUID.randomUUID();
+
+        when(subtaskRepository.findById(nonExistingSubtaskId)).thenReturn(Optional.empty());
+
+        assertThrows(SubtaskNotFoundException.class, () -> subtaskService.delete(nonExistingSubtaskId));
+
+        verify(subtaskRepository, times(0)).deleteById(nonExistingSubtaskId);
+    }
+
+    @Test
+    public void getAllSubtasksForGivenUser() {
+        UUID userId = UUID.randomUUID();
+        List<Subtask> sampleSubtasks = Arrays.asList(
+                new Subtask(UUID.randomUUID(), "Subtask 1", TaskAssignedStatus.TO_DO, null, null),
+                new Subtask(UUID.randomUUID(), "Subtask 2", TaskAssignedStatus.DONE, null, null));
+
+        when(subtaskRepository.getAllSubtasks(userId)).thenReturn(sampleSubtasks);
+
+        List<Subtask> resultSubtasks = subtaskService.getAllSubtasksForGivenUser(userId);
+
+        assertEquals(sampleSubtasks.size(), resultSubtasks.size());
+        assertEquals(sampleSubtasks.get(0).getDescription(), resultSubtasks.get(0).getDescription());
+        assertEquals(sampleSubtasks.get(1).getDescription(), resultSubtasks.get(1).getDescription());
+
+        verify(subtaskRepository, times(1)).getAllSubtasks(userId);
     }
 }

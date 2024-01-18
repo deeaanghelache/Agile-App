@@ -11,16 +11,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = SubtaskController.class)
 public class SubtaskControllerTest {
@@ -87,5 +91,27 @@ public class SubtaskControllerTest {
                 .andExpect(status().isNotFound());
 
         verify(subtaskService).updateStatus(subtaskId, status);
+    }
+
+    @Test
+    public void getAllSubtasksForGivenUser() throws Exception {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        List<Subtask> sampleSubtasks = Arrays.asList(
+                new Subtask(id1, "Subtask 1", TaskAssignedStatus.TO_DO, null, null),
+                new Subtask(id2, "Subtask 2", TaskAssignedStatus.DONE, null, null));
+
+        when(subtaskService.getAllSubtasksForGivenUser(userId)).thenReturn(sampleSubtasks);
+
+        mockMvc.perform(get("/subtask/getAllSubtasksForGivenUser/{id}", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(sampleSubtasks.size()))
+                .andExpect(jsonPath("$[0].description").value("Subtask 1"))
+                .andExpect(jsonPath("$[1].description").value("Subtask 2"));
+
+        verify(subtaskService, times(1)).getAllSubtasksForGivenUser(userId);
     }
 }

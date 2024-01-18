@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -136,5 +138,64 @@ public class TaskAssignedServiceTest {
 
         verify(taskAssignedRepository).findById(taskId);
         verify(taskAssignedRepository, never()).save(any());
+    }
+
+    @Test
+    public void delete_foundTask_shouldDelet() {
+        UUID taskId = UUID.randomUUID();
+        TaskAssigned sampleTaskAssigned = new TaskAssigned(taskId, "Task 1", TaskAssignedStatus.DONE);
+
+        when(taskAssignedRepository.findById(taskId)).thenReturn(Optional.of(sampleTaskAssigned));
+
+        taskAssignedService.delete(taskId);
+
+        verify(taskAssignedRepository, times(1)).deleteById(taskId);
+    }
+
+    @Test
+    public void delete_nonexistentTask_shouldThrowTaskNotFoundExcetion() {
+        UUID nonExistingTaskId = UUID.randomUUID();
+
+        when(taskAssignedRepository.findById(nonExistingTaskId)).thenReturn(Optional.empty());
+
+        assertThrows(TaskAssignedNotFoundException.class, () -> taskAssignedService.delete(nonExistingTaskId));
+
+        verify(taskAssignedRepository, times(0)).deleteById(nonExistingTaskId);
+    }
+
+    @Test
+    public void fetAllTasksForGivenUser() {
+        UUID userId = UUID.randomUUID();
+        List<TaskAssigned> sampleTasks = Arrays.asList(
+                new TaskAssigned(UUID.randomUUID(), "Task 1", TaskAssignedStatus.TO_DO),
+                new TaskAssigned(UUID.randomUUID(), "Task 2", TaskAssignedStatus.DONE));
+
+        when(taskAssignedRepository.getAllTasks(userId)).thenReturn(sampleTasks);
+
+        List<TaskAssigned> resultTasks = taskAssignedService.getAllTasksForGivenUser(userId);
+
+        assertEquals(sampleTasks.size(), resultTasks.size());
+        assertEquals(sampleTasks.get(0).getDescription(), resultTasks.get(0).getDescription());
+        assertEquals(sampleTasks.get(1).getDescription(), resultTasks.get(1).getDescription());
+
+        verify(taskAssignedRepository, times(1)).getAllTasks(userId);
+    }
+
+    @Test
+    public void getAllTasksForGivenProject() {
+        UUID projectId = UUID.randomUUID();
+        List<TaskAssigned> sampleTasks = Arrays.asList(
+                new TaskAssigned(UUID.randomUUID(), "Task 1", TaskAssignedStatus.NICE_TO_HAVE),
+                new TaskAssigned(UUID.randomUUID(), "Task 2", TaskAssignedStatus.IN_PROGRESS));
+
+        when(taskAssignedRepository.getAllTasksForProject(projectId)).thenReturn(sampleTasks);
+
+        List<TaskAssigned> resultTasks = taskAssignedService.getAllTasksForGivenProject(projectId);
+
+        assertEquals(sampleTasks.size(), resultTasks.size());
+        assertEquals(sampleTasks.get(0).getDescription(), resultTasks.get(0).getDescription());
+        assertEquals(sampleTasks.get(1).getDescription(), resultTasks.get(1).getDescription());
+
+        verify(taskAssignedRepository, times(1)).getAllTasksForProject(projectId);
     }
 }

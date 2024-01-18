@@ -9,9 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -70,6 +74,35 @@ public class UserControllerTest {
 //                .andExpect(jsonPath("$.password").value(expectedUser.getUserId()))
 //                .andExpect(jsonPath("$.email").value(expectedUser.getEmail()));
 //    }
+
+    @Test
+    public void getAllUsers() throws Exception {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+
+        List<User> sampleUsers = Arrays.asList(
+                new User(id1, "John", "Doe", "email1", "Password"),
+                new User(id2, "Jane", "Doe", "email2", "password"));
+
+        when(userService.getAllUsers()).thenReturn(sampleUsers);
+
+        mockMvc.perform(get("/user/getAll")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(sampleUsers.size()))
+                .andExpect(jsonPath("$[0].userId").value(id1.toString()))
+                .andExpect(jsonPath("$[1].userId").value(id2.toString()))
+                .andExpect(jsonPath("$[0].firstName").value("John"))
+                .andExpect(jsonPath("$[1].firstName").value("Jane"))
+                .andExpect(jsonPath("$[0].lastName").value("Doe"))
+                .andExpect(jsonPath("$[1].lastName").value("Doe"))
+                .andExpect(jsonPath("$[0].email").value("email1"))
+                .andExpect(jsonPath("$[1].email").value("email2"))
+                .andExpect(jsonPath("$[0].password").value("Password"))
+                .andExpect(jsonPath("$[1].password").value("password"));
+
+        verify(userService, times(1)).getAllUsers();
+    }
 
     @Test
     public void getUserById() throws Exception {
