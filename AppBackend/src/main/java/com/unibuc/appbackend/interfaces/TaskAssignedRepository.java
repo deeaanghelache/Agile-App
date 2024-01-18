@@ -18,5 +18,5 @@ public interface TaskAssignedRepository extends JpaRepository<TaskAssigned, UUID
     @Query(value = "SELECT task_assigned.user_id, task_assigned.description, task_assigned.status, task_assigned.task_assigned_id,  task_assigned.project_id, task_assigned.sprint_id " +
             "FROM task_assigned JOIN project ON (task_assigned.project_id = project.project_id) " +
             "WHERE task_assigned.project_id = :projectId", nativeQuery = true)
-    List<TaskAssigned> getAllTasksForProject(UUID projectId);
+    List<TaskAssigned> getAllTasksForProject(@Param("projectId") UUID projectId);
 }

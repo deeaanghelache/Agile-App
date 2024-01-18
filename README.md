@@ -1,5 +1,7 @@
 # Agile App - _Java Web Programming Course_
 
+Anghelache Andreea, *Master Inginerie Software*
+
 ## TECHNOLOGIES
 - **Backend:** Java, Spring Boot, Lombok
 - **Database:** MySQL
@@ -142,6 +144,15 @@ Each java class has a corresponding Interface class which extends JpaRepository.
 - UserRepository
 - UserProjectRepository
 - UserRoleRepository
+
+In some repositories, I defined some custom made queries, such as:
+
+```java
+    @Query(value = "SELECT task_assigned.user_id, task_assigned.description, task_assigned.status, task_assigned.task_assigned_id,  task_assigned.project_id, task_assigned.sprint_id " +
+            "FROM task_assigned JOIN project ON (task_assigned.project_id = project.project_id) " +
+            "WHERE task_assigned.project_id = :projectId", nativeQuery = true)
+    List<TaskAssigned> getAllTasksForProject(@Param("projectId") UUID projectId);
+```
 
 ### SERVICES
 Each java class has a corresponding Service class. 
@@ -316,7 +327,7 @@ I have tested the methods in the controllers and services. For this, I used JUni
 
 #### Test Coverage
 
-
+![](/ReadmePhotos/TestCoverage.png)
 
 ## Frontend
 For the frontend part I chose to use Angular. You can find the frontend files in the AppFrontend folder.
